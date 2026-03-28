@@ -1,10 +1,10 @@
 """
-Configuration for the OSM Racing Game.
+Configuration for the OSM Quest Explorer.
 Logitech G923 axis/button mappings and game settings.
 """
 
 # ── Window ──────────────────────────────────────────────────────────────────
-WINDOW_TITLE  = "OSM Street Racer – Logitech G923"
+WINDOW_TITLE  = "OSM Quest Explorer – Logitech G923"
 WINDOW_WIDTH  = 1280
 WINDOW_HEIGHT = 720
 TARGET_FPS    = 60
