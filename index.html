@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitPath – Your Personal Fitness Planner</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Progress Bar -->
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Step indicators -->
+    <div class="step-indicators" id="stepIndicators"></div>
+
+    <!-- Screens -->
+    <div class="screens" id="screens">
+
+      <!-- Screen 0: Welcome -->
+      <div class="screen active" id="screen-0">
+        <div class="screen-content center">
+          <div class="logo">💪</div>
+          <h1>FitPath</h1>
+          <p class="subtitle">Your personalized fitness journey starts here.<br>Answer a few quick questions and we'll tailor a plan just for you.</p>
+          <button class="btn btn-primary btn-large" onclick="nextScreen()">Get Started</button>
+        </div>
+      </div>
+
+      <!-- Screen 1: Basic Info -->
+      <div class="screen" id="screen-1">
+        <div class="screen-content">
+          <h2>Let's start with the basics</h2>
+          <p class="step-label">Step 1 of 5</p>
+
+          <div class="form-group">
+            <label>Sex</label>
+            <div class="radio-group">
+              <label class="radio-card">
+                <input type="radio" name="sex" value="male" />
+                <span class="radio-card-inner">
+                  <span class="radio-icon">♂</span>
+                  <span>Male</span>
+                </span>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="sex" value="female" />
+                <span class="radio-card-inner">
+                  <span class="radio-icon">♀</span>
+                  <span>Female</span>
+                </span>
+              </label>
+              <label class="radio-card">
+                <input type="radio" name="sex" value="other" />
+                <span class="radio-card-inner">
+                  <span class="radio-icon">⚧</span>
+                  <span>Other</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="age">Age</label>
+              <div class="input-wrapper">
+                <input type="number" id="age" placeholder="e.g. 28" min="13" max="100" />
+                <span class="input-unit">yrs</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="prevScreen()">Back</button>
+            <button class="btn btn-primary" onclick="validateAndNext(1)">Continue</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 2: Measurements -->
+      <div class="screen" id="screen-2">
+        <div class="screen-content">
+          <h2>Your measurements</h2>
+          <p class="step-label">Step 2 of 5</p>
+
+          <div class="unit-toggle">
+            <button class="unit-btn active" id="unitMetric" onclick="setUnit('metric')">Metric (kg / cm)</button>
+            <button class="unit-btn" id="unitImperial" onclick="setUnit('imperial')">Imperial (lb / ft)</button>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group" id="heightGroup">
+              <label for="heightCm">Height</label>
+              <div class="input-wrapper">
+                <input type="number" id="heightCm" placeholder="e.g. 175" min="100" max="250" />
+                <span class="input-unit" id="heightUnit">cm</span>
+              </div>
+            </div>
+            <div class="form-group hidden" id="heightFtGroup">
+              <label>Height</label>
+              <div class="input-row">
+                <div class="input-wrapper">
+                  <input type="number" id="heightFt" placeholder="5" min="3" max="8" />
+                  <span class="input-unit">ft</span>
+                </div>
+                <div class="input-wrapper">
+                  <input type="number" id="heightIn" placeholder="11" min="0" max="11" />
+                  <span class="input-unit">in</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="weight">Weight</label>
+              <div class="input-wrapper">
+                <input type="number" id="weight" placeholder="e.g. 75" min="30" max="400" />
+                <span class="input-unit" id="weightUnit">kg</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="prevScreen()">Back</button>
+            <button class="btn btn-primary" onclick="validateAndNext(2)">Continue</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 3: Body Type -->
+      <div class="screen" id="screen-3">
+        <div class="screen-content">
+          <h2>What's your body type?</h2>
+          <p class="step-label">Step 3 of 5</p>
+          <p class="helper-text">Choose the one that best describes your natural build.</p>
+
+          <div class="body-type-grid">
+            <label class="body-type-card">
+              <input type="radio" name="bodyType" value="ectomorph" />
+              <div class="body-type-inner">
+                <div class="body-icon">🦒</div>
+                <h3>Ectomorph</h3>
+                <p>Lean &amp; long, struggles to gain weight or muscle</p>
+              </div>
+            </label>
+            <label class="body-type-card">
+              <input type="radio" name="bodyType" value="mesomorph" />
+              <div class="body-type-inner">
+                <div class="body-icon">🏋️</div>
+                <h3>Mesomorph</h3>
+                <p>Athletic &amp; muscular, responds well to training</p>
+              </div>
+            </label>
+            <label class="body-type-card">
+              <input type="radio" name="bodyType" value="endomorph" />
+              <div class="body-type-inner">
+                <div class="body-icon">🐻</div>
+                <h3>Endomorph</h3>
+                <p>Broader frame, gains weight easily, curvy build</p>
+              </div>
+            </label>
+            <label class="body-type-card">
+              <input type="radio" name="bodyType" value="unsure" />
+              <div class="body-type-inner">
+                <div class="body-icon">🤷</div>
+                <h3>Not Sure</h3>
+                <p>I'm not sure which type fits me best</p>
+              </div>
+            </label>
+          </div>
+
+          <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="prevScreen()">Back</button>
+            <button class="btn btn-primary" onclick="validateAndNext(3)">Continue</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 4: Experience -->
+      <div class="screen" id="screen-4">
+        <div class="screen-content">
+          <h2>Your training experience</h2>
+          <p class="step-label">Step 4 of 5</p>
+
+          <div class="form-group">
+            <label>Weight Training Experience</label>
+            <div class="experience-list">
+              <label class="exp-card">
+                <input type="radio" name="weightExp" value="none" />
+                <span class="exp-inner">
+                  <span class="exp-badge beginner">Beginner</span>
+                  <span class="exp-desc">Little to no experience with weights</span>
+                </span>
+              </label>
+              <label class="exp-card">
+                <input type="radio" name="weightExp" value="beginner" />
+                <span class="exp-inner">
+                  <span class="exp-badge novice">Novice</span>
+                  <span class="exp-desc">Trained inconsistently for up to a year</span>
+                </span>
+              </label>
+              <label class="exp-card">
+                <input type="radio" name="weightExp" value="intermediate" />
+                <span class="exp-inner">
+                  <span class="exp-badge intermediate">Intermediate</span>
+                  <span class="exp-desc">Consistent training for 1–3 years</span>
+                </span>
+              </label>
+              <label class="exp-card">
+                <input type="radio" name="weightExp" value="advanced" />
+                <span class="exp-inner">
+                  <span class="exp-badge advanced">Advanced</span>
+                  <span class="exp-desc">Serious training for 3+ years</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top: 24px;">
+            <label>General Exercise Frequency</label>
+            <div class="experience-list">
+              <label class="exp-card">
+                <input type="radio" name="exerciseFreq" value="sedentary" />
+                <span class="exp-inner">
+                  <span class="exp-desc">🛋️ Sedentary – little to no exercise</span>
+                </span>
+              </label>
+              <label class="exp-card">
+                <input type="radio" name="exerciseFreq" value="light" />
+                <span class="exp-inner">
+                  <span class="exp-desc">🚶 Light – 1–2 days/week</span>
+                </span>
+              </label>
+              <label class="exp-card">
+                <input type="radio" name="exerciseFreq" value="moderate" />
+                <span class="exp-inner">
+                  <span class="exp-desc">🏃 Moderate – 3–4 days/week</span>
+                </span>
+              </label>
+              <label class="exp-card">
+                <input type="radio" name="exerciseFreq" value="active" />
+                <span class="exp-inner">
+                  <span class="exp-desc">⚡ Active – 5–6 days/week</span>
+                </span>
+              </label>
+              <label class="exp-card">
+                <input type="radio" name="exerciseFreq" value="very_active" />
+                <span class="exp-inner">
+                  <span class="exp-desc">🔥 Very Active – daily intense training</span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="prevScreen()">Back</button>
+            <button class="btn btn-primary" onclick="validateAndNext(4)">Continue</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 5: Goal Selection -->
+      <div class="screen" id="screen-5">
+        <div class="screen-content">
+          <h2>What's your main goal?</h2>
+          <p class="step-label">Step 5 of 5</p>
+          <p class="helper-text">Choose the goal that matters most to you right now.</p>
+
+          <div class="goal-grid">
+            <label class="goal-card">
+              <input type="radio" name="goal" value="athletic" />
+              <div class="goal-inner">
+                <div class="goal-icon">🏆</div>
+                <h3>Athletic Performance</h3>
+                <p>Build strength, speed, endurance, and peak physical capability</p>
+                <ul class="goal-features">
+                  <li>Strength &amp; power training</li>
+                  <li>Sport-specific conditioning</li>
+                  <li>Performance nutrition</li>
+                </ul>
+              </div>
+            </label>
+            <label class="goal-card">
+              <input type="radio" name="goal" value="weight_loss" />
+              <div class="goal-inner">
+                <div class="goal-icon">⚖️</div>
+                <h3>Weight Loss</h3>
+                <p>Burn fat, improve body composition, and feel your best</p>
+                <ul class="goal-features">
+                  <li>Calorie-deficit guidance</li>
+                  <li>Fat-burning workouts</li>
+                  <li>Sustainable habits</li>
+                </ul>
+              </div>
+            </label>
+          </div>
+
+          <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="prevScreen()">Back</button>
+            <button class="btn btn-primary" onclick="validateAndNext(5)">See My Plan</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screen 6: Results -->
+      <div class="screen" id="screen-6">
+        <div class="screen-content">
+          <div class="results-header">
+            <div class="results-icon">🎯</div>
+            <h2>Your Personalized Plan</h2>
+            <p class="subtitle" id="resultsSubtitle"></p>
+          </div>
+
+          <div class="stats-grid" id="statsGrid"></div>
+
+          <div class="plan-section" id="planSection"></div>
+
+          <button class="btn btn-primary btn-large" style="width:100%; margin-top: 24px;" onclick="resetApp()">Start Over</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
