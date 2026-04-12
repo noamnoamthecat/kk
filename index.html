@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="theme-color" content="#6C63FF"/>
+  <meta name="description" content="FitPath – Your AI-powered fitness companion. Personalized plans, sports scheduling, progress tracking and more."/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <title>FitPath – Your AI Fitness Coach</title>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💪%3C/text%3E%3C/svg%3E"/>
+</head>
+<body>
+<div class="app" id="app">
+
+  <!-- ══════════ LANDING ══════════ -->
+  <section class="view view-landing active" id="view-landing">
+    <div class="landing-hero">
+      <div class="landing-blob blob-1"></div>
+      <div class="landing-blob blob-2"></div>
+      <div class="landing-content">
+        <div class="logo-big">💪</div>
+        <h1 class="landing-title">FitPath</h1>
+        <p class="landing-tagline">AI-powered coaching. 80+ sports. Real results.</p>
+        <div class="landing-features">
+          <div class="feat"><span>🤖</span>AI Coach</div>
+          <div class="feat"><span>🏅</span>80+ Sports</div>
+          <div class="feat"><span>📈</span>Progress Tracking</div>
+          <div class="feat"><span>🏆</span>Achievements</div>
+        </div>
+        <button class="btn btn-xl" onclick="startOnboarding()">Start My Journey — Free</button>
+        <button class="btn-link" id="continueBtn" style="display:none" onclick="openDashboard()">Continue where I left off →</button>
+        <div class="landing-stats">
+          <div><strong>80+</strong><span>Sports</span></div>
+          <div><strong>100%</strong><span>Free</span></div>
+          <div><strong>2 min</strong><span>Setup</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ ONBOARDING ══════════ -->
+  <section class="view view-onboarding" id="view-onboarding">
+    <div class="top-bar">
+      <button class="icon-btn" onclick="goHome()">✕</button>
+      <div class="progress-track"><div class="progress-fill" id="onbProgress"></div></div>
+      <span class="progress-text" id="onbStepText">1/7</span>
+    </div>
+    <div class="onb-screens" id="onbScreens">
+
+      <!-- Step 1: Name -->
+      <div class="onb-step active" data-step="1">
+        <div class="onb-emoji">👋</div>
+        <h2>What should we call you?</h2>
+        <p class="muted">We'll personalize everything just for you.</p>
+        <input type="text" class="big-input" id="inpName" placeholder="Your name" maxlength="30"/>
+        <button class="btn btn-primary btn-block" onclick="onbNext(1)">Continue →</button>
+      </div>
+
+      <!-- Step 2: Sex & Age -->
+      <div class="onb-step" data-step="2">
+        <div class="onb-emoji">🧍</div>
+        <h2>Basic info</h2>
+        <p class="muted">Helps us calculate accurate fitness metrics.</p>
+        <label class="label">Sex</label>
+        <div class="radio-row">
+          <label class="radio-card"><input type="radio" name="sex" value="male"/><span><i>♂</i>Male</span></label>
+          <label class="radio-card"><input type="radio" name="sex" value="female"/><span><i>♀</i>Female</span></label>
+          <label class="radio-card"><input type="radio" name="sex" value="other"/><span><i>⚧</i>Other</span></label>
+        </div>
+        <label class="label">Age</label>
+        <div class="input-wrap"><input type="number" id="inpAge" placeholder="28" min="13" max="100"/><span class="unit">yrs</span></div>
+        <button class="btn btn-primary btn-block" onclick="onbNext(2)">Continue →</button>
+      </div>
+
+      <!-- Step 3: Measurements -->
+      <div class="onb-step" data-step="3">
+        <div class="onb-emoji">📏</div>
+        <h2>Your measurements</h2>
+        <p class="muted">Used to calculate BMI, BMR, and calorie targets.</p>
+        <div class="unit-toggle">
+          <button class="ut-btn active" id="utMetric" onclick="setUnit('metric')">Metric (kg/cm)</button>
+          <button class="ut-btn" id="utImperial" onclick="setUnit('imperial')">Imperial (lb/ft)</button>
+        </div>
+        <label class="label">Height</label>
+        <div id="heightMetric"><div class="input-wrap"><input type="number" id="inpHCm" placeholder="175" min="100" max="250"/><span class="unit">cm</span></div></div>
+        <div id="heightImperial" class="hidden">
+          <div class="input-row">
+            <div class="input-wrap"><input type="number" id="inpHFt" placeholder="5" min="3" max="8"/><span class="unit">ft</span></div>
+            <div class="input-wrap"><input type="number" id="inpHIn" placeholder="9" min="0" max="11"/><span class="unit">in</span></div>
+          </div>
+        </div>
+        <label class="label">Weight</label>
+        <div class="input-wrap"><input type="number" id="inpWt" placeholder="75" min="30" max="400"/><span class="unit" id="wtUnit">kg</span></div>
+        <button class="btn btn-primary btn-block" onclick="onbNext(3)">Continue →</button>
+      </div>
+
+      <!-- Step 4: Body Type -->
+      <div class="onb-step" data-step="4">
+        <div class="onb-emoji">🧬</div>
+        <h2>Your body type</h2>
+        <p class="muted">Pick the closest to your natural build.</p>
+        <div class="card-grid">
+          <label class="pick-card"><input type="radio" name="body" value="ectomorph"/><span><i>🦒</i><b>Ectomorph</b><em>Lean, slim frame</em></span></label>
+          <label class="pick-card"><input type="radio" name="body" value="mesomorph"/><span><i>🏋️</i><b>Mesomorph</b><em>Athletic, muscular</em></span></label>
+          <label class="pick-card"><input type="radio" name="body" value="endomorph"/><span><i>🐻</i><b>Endomorph</b><em>Broader frame</em></span></label>
+          <label class="pick-card"><input type="radio" name="body" value="unsure"/><span><i>🤷</i><b>Not sure</b><em>Mixed / unknown</em></span></label>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="onbNext(4)">Continue →</button>
+      </div>
+
+      <!-- Step 5: Experience -->
+      <div class="onb-step" data-step="5">
+        <div class="onb-emoji">🏋️</div>
+        <h2>Your experience</h2>
+        <p class="muted">Be honest — we'll tune the plan accordingly.</p>
+        <label class="label">Weight training</label>
+        <div class="pick-list">
+          <label class="pick-row"><input type="radio" name="exp" value="none"/><span><b>Beginner</b><em>Little to no experience</em></span></label>
+          <label class="pick-row"><input type="radio" name="exp" value="beginner"/><span><b>Novice</b><em>Up to 1 year</em></span></label>
+          <label class="pick-row"><input type="radio" name="exp" value="intermediate"/><span><b>Intermediate</b><em>1–3 years consistent</em></span></label>
+          <label class="pick-row"><input type="radio" name="exp" value="advanced"/><span><b>Advanced</b><em>3+ years</em></span></label>
+        </div>
+        <label class="label">Current weekly activity</label>
+        <div class="pick-list">
+          <label class="pick-row"><input type="radio" name="freq" value="sedentary"/><span>🛋️ Sedentary — rarely exercise</span></label>
+          <label class="pick-row"><input type="radio" name="freq" value="light"/><span>🚶 Light — 1–2 days/week</span></label>
+          <label class="pick-row"><input type="radio" name="freq" value="moderate"/><span>🏃 Moderate — 3–4 days/week</span></label>
+          <label class="pick-row"><input type="radio" name="freq" value="active"/><span>⚡ Active — 5–6 days/week</span></label>
+          <label class="pick-row"><input type="radio" name="freq" value="very_active"/><span>🔥 Very Active — daily intense</span></label>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="onbNext(5)">Continue →</button>
+      </div>
+
+      <!-- Step 6: Sports Selection -->
+      <div class="onb-step" data-step="6">
+        <div class="onb-emoji">🏅</div>
+        <h2>Pick your sports</h2>
+        <p class="muted">Choose <strong>up to 5 sports</strong>. We'll build your schedule around them.</p>
+        <div class="sports-counter">
+          <span id="sportsCount">0</span>/5 selected
+        </div>
+        <input type="text" class="search-bar" id="sportSearch" placeholder="🔍 Search sports..." oninput="filterSports()"/>
+        <div class="filter-chips" id="sportCatFilter"></div>
+        <div class="sports-grid" id="sportsGrid"></div>
+        <button class="btn btn-primary btn-block" onclick="onbNext(6)">Continue →</button>
+      </div>
+
+      <!-- Step 7: Goal -->
+      <div class="onb-step" data-step="7">
+        <div class="onb-emoji">🎯</div>
+        <h2>Your main goal</h2>
+        <p class="muted">We'll optimize your schedule and nutrition around this.</p>
+        <div class="card-grid goal-grid">
+          <label class="pick-card big"><input type="radio" name="goal" value="athletic"/><span><i>🏆</i><b>Athletic Performance</b><em>Strength, speed &amp; endurance</em></span></label>
+          <label class="pick-card big"><input type="radio" name="goal" value="weight_loss"/><span><i>⚖️</i><b>Weight Loss</b><em>Burn fat, reshape body</em></span></label>
+          <label class="pick-card big"><input type="radio" name="goal" value="muscle_gain"/><span><i>💪</i><b>Muscle Gain</b><em>Build lean muscle</em></span></label>
+          <label class="pick-card big"><input type="radio" name="goal" value="general"/><span><i>🌱</i><b>General Health</b><em>Stay fit, feel great</em></span></label>
+        </div>
+        <button class="btn btn-primary btn-block" onclick="onbNext(7)">Create My Plan 🎉</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════ DASHBOARD ══════════ -->
+  <section class="view view-dashboard" id="view-dashboard">
+    <header class="db-header">
+      <div>
+        <p class="db-greeting" id="dbGreeting">Good morning</p>
+        <h1 class="db-title" id="dbTitle">Let's crush it 💪</h1>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="icon-btn" id="darkToggle" onclick="toggleDark()" title="Toggle dark mode">🌙</button>
+        <button class="avatar" id="dbAvatar" onclick="switchTab('profile')">?</button>
+      </div>
+    </header>
+    <main class="db-main" id="dbMain"></main>
+    <nav class="bottom-nav">
+      <button class="nav-btn active" data-tab="home"     onclick="switchTab('home')">    <span class="nav-icon">🏠</span><span>Home</span></button>
+      <button class="nav-btn"        data-tab="schedule" onclick="switchTab('schedule')"><span class="nav-icon">📅</span><span>Schedule</span></button>
+      <button class="nav-btn"        data-tab="chat"     onclick="switchTab('chat')">    <span class="nav-icon">🤖</span><span>AI Coach</span></button>
+      <button class="nav-btn"        data-tab="progress" onclick="switchTab('progress')"><span class="nav-icon">📈</span><span>Progress</span></button>
+      <button class="nav-btn"        data-tab="profile"  onclick="switchTab('profile')"> <span class="nav-icon">👤</span><span>Profile</span></button>
+    </nav>
+  </section>
+
+</div><!-- end .app -->
+
+<!-- Exercise detail modal -->
+<div class="modal-backdrop hidden" id="exModal" onclick="closeExModal(event)">
+  <div class="modal" id="exModalContent"></div>
+</div>
+
+<!-- Achievement popup -->
+<div class="achievement-popup hidden" id="achPopup">
+  <div class="ach-pop-inner">
+    <div class="ach-pop-icon" id="achPopIcon"></div>
+    <div class="ach-pop-text">
+      <strong id="achPopTitle"></strong>
+      <span id="achPopDesc"></span>
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>if("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");</script>
+<script src="data.js"></script>
+<script src="chat.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

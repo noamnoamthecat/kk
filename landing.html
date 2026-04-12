@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitPath – Welcome</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #6C63FF 0%, #FF6584 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 28px;
+      padding: 56px 48px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+
+    .logo { font-size: 4rem; margin-bottom: 16px; }
+
+    h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: #6C63FF;
+      margin-bottom: 12px;
+    }
+
+    p {
+      color: #6b7280;
+      font-size: 1.05rem;
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+
+    .features {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 40px;
+      text-align: left;
+    }
+
+    .feature {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      background: #f7f8fc;
+      border-radius: 12px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: #1a1a2e;
+    }
+
+    .feature-icon { font-size: 1.4rem; }
+
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 18px;
+      background: #6C63FF;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border-radius: 14px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 6px 20px rgba(108,99,255,0.35);
+    }
+
+    .btn:hover {
+      background: #574fd6;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(108,99,255,0.45);
+    }
+
+    .footer {
+      margin-top: 24px;
+      font-size: 0.78rem;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">💪</div>
+    <h1>FitPath</h1>
+    <p>Your personalized fitness planner. Answer a few quick questions and get a plan built around your body and goals.</p>
+
+    <div class="features">
+      <div class="feature">
+        <span class="feature-icon">📊</span>
+        <span>BMI, BMR &amp; calorie calculations</span>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🏋️</span>
+        <span>Athletic performance or weight loss plans</span>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">🥗</span>
+        <span>Tailored nutrition &amp; training advice</span>
+      </div>
+      <div class="feature">
+        <span class="feature-icon">⚡</span>
+        <span>Takes less than 2 minutes</span>
+      </div>
+    </div>
+
+    <a href="index.html" class="btn">Start My FitPath →</a>
+
+    <p class="footer">Free · No sign-up required · 100% private</p>
+  </div>
+</body>
+</html>

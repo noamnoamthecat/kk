@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FitPath – Fitness Guide</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f7f8fc;
+      color: #1a1a2e;
+      padding: 32px 16px;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    header h1 { font-size: 2.2rem; color: #6C63FF; font-weight: 800; }
+    header p { color: #6b7280; margin-top: 8px; font-size: 1rem; }
+
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 24px;
+      padding: 10px 20px;
+      background: #6C63FF;
+      color: #fff;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .back-btn:hover { background: #574fd6; }
+
+    section { margin-bottom: 36px; }
+    section h2 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #ede9ff;
+      color: #6C63FF;
+    }
+
+    .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 500px) { .cards { grid-template-columns: 1fr; } }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 2px 12px rgba(108,99,255,0.08);
+    }
+    .card-icon { font-size: 1.8rem; margin-bottom: 8px; }
+    .card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+    .card p { font-size: 0.82rem; color: #6b7280; line-height: 1.5; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(108,99,255,0.08);
+    }
+    th {
+      background: #6C63FF;
+      color: #fff;
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+    td {
+      padding: 11px 16px;
+      font-size: 0.83rem;
+      border-bottom: 1px solid #f0f0f5;
+      color: #374151;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: #f9f9ff; }
+
+    footer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <a href="landing.html" class="back-btn">← Back to FitPath</a>
+
+    <header>
+      <h1>💪 Fitness Guide</h1>
+      <p>Everything you need to know to train smarter and eat better.</p>
+    </header>
+
+    <!-- Workouts -->
+    <section>
+      <h2>🏋️ Key Exercises</h2>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🦵</div>
+          <h3>Squat</h3>
+          <p>Builds quads, glutes, and core. The king of lower body exercises. Keep chest up, knees over toes.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏗️</div>
+          <h3>Deadlift</h3>
+          <p>Full-body strength move targeting hamstrings, back, and grip. Keep the bar close and back neutral.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">💪</div>
+          <h3>Bench Press</h3>
+          <p>Primary chest builder. Also works shoulders and triceps. Control the descent, press explosively.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔼</div>
+          <h3>Pull-Up</h3>
+          <p>Best upper back and bicep exercise. Use full range of motion — dead hang to chin over bar.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧍</div>
+          <h3>Overhead Press</h3>
+          <p>Builds strong shoulders and upper chest. Brace your core to avoid lower back strain.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🏃</div>
+          <h3>Lunges</h3>
+          <p>Great for single-leg strength and balance. Targets glutes, quads, and hip flexors.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Nutrition -->
+    <section>
+      <h2>🥗 Nutrition Basics</h2>
+      <table>
+        <thead>
+          <tr><th>Macronutrient</th><th>Role</th><th>Good Sources</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Protein</td><td>Builds & repairs muscle</td><td>Chicken, eggs, fish, Greek yogurt, legumes</td></tr>
+          <tr><td>Carbohydrates</td><td>Primary energy source</td><td>Rice, oats, sweet potato, fruits, bread</td></tr>
+          <tr><td>Fats</td><td>Hormones & joint health</td><td>Avocado, nuts, olive oil, salmon</td></tr>
+          <tr><td>Water</td><td>Performance & recovery</td><td>2.5–3 L/day minimum</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Recovery -->
+    <section>
+      <h2>😴 Recovery Tips</h2>
+      <div class="cards">
+        <div class="card">
+          <div class="card-icon">🌙</div>
+          <h3>Sleep 7–9 Hours</h3>
+          <p>Muscle is built during sleep, not in the gym. Prioritize sleep above everything else.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🧘</div>
+          <h3>Stretch & Mobilize</h3>
+          <p>10 minutes of stretching post-workout reduces soreness and improves range of motion.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">💧</div>
+          <h3>Stay Hydrated</h3>
+          <p>Even mild dehydration reduces performance by up to 10%. Drink water throughout the day.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">📅</div>
+          <h3>Rest Days</h3>
+          <p>Take 1–2 rest days per week. Active recovery (walks, yoga) is better than total rest.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- BMI Reference -->
+    <section>
+      <h2>📊 BMI Reference Chart</h2>
+      <table>
+        <thead>
+          <tr><th>BMI Range</th><th>Category</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Below 18.5</td><td>Underweight</td><td>Focus on caloric surplus & strength training</td></tr>
+          <tr><td>18.5 – 24.9</td><td>Normal weight</td><td>Maintain with balanced diet & exercise</td></tr>
+          <tr><td>25.0 – 29.9</td><td>Overweight</td><td>Moderate caloric deficit & cardio</td></tr>
+          <tr><td>30.0 and above</td><td>Obese</td><td>Consult a doctor, gradual lifestyle changes</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer>
+      ⚠️ This guide is for informational purposes only. Always consult a healthcare professional before starting a new fitness program.<br><br>
+      &copy; 2026 FitPath
+    </footer>
+
+  </div>
+</body>
+</html>
