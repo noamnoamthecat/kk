@@ -28,7 +28,15 @@
 
 The test covers about 8.5 years of walk-forward data across 40 assets, net of costs, at a 10% volatility target:
 
-<!-- RESULTS -->
+| Variant | Net Sharpe | IC (t-stat) | Max DD | Deflated Sharpe | 80% interval coverage | Avg. coverage error, 63-day windows |
+|---|---|---|---|---|---|---|
+| **regime + conformal sizing** (production) | **0.59** | 0.025 (7.5) | **-18.9%** | **0.81** | 80.0% | **1.8pp** (static: 2.2pp) |
+| regime, point forecast | 0.51 | 0.025 (7.5) | -19.6% | 0.74 | 80.0% | 1.8pp |
+| regime-blind | 0.13 | 0.019 (5.4) | -36.0% | 0.32 | 80.0% | 2.0pp |
+| *oracle: true planted signal (ceiling)* | *1.08* | *0.035 (10.5)* | *-25.1%* | — | — | — |
+
+- The HMM identifies the hidden regime **84%** of the time using only past data.
+- Adaptive conformal tracking keeps coverage closer to target across the test period than static intervals (1.8pp vs 2.2pp average error).
 
 The simulator hides a signal that **reverses by regime**. The regime-blind model sees the two effects largely cancel out, which is why its result is poor.
 
@@ -38,7 +46,7 @@ The simulator hides a signal that **reverses by regime**. The regime-blind model
 
 ```bash
 pip install -e ".[dev,yahoo]"
-pytest -q                                          # 34 tests
+pytest -q                                          # 35 tests
 
 # 1) Live web dashboard: simulated market, no keys needed
 uvicorn regimeml.server:app --port 8000            # open http://localhost:8000

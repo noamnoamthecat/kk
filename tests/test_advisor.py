@@ -89,3 +89,11 @@ def test_email_render_and_send(monkeypatch):
     monkeypatch.setenv("SMTP_USER", "bot@example.com")
     send("s@x.io", subject, text, html)
     assert sent == {"host": ("smtp.example.com", 587), "tls": True, "login": "bot@example.com", "to": "s@x.io"}
+
+
+def test_model_picks_are_capped():
+    from regimeml.advisor import picks_from_state
+    rows = [{"asset": f"A{i}", "score": s, "price": 1.0} for i, s in enumerate([9, 1, 1, 1, 1, 0.5, -1])]
+    picks = picks_from_state({"portfolio": rows})
+    w = [p["weight"] for p in picks]
+    assert len(picks) == 6 and abs(sum(w) - 1) < 1e-9 and max(w) <= 0.2 + 1e-9

@@ -237,10 +237,21 @@ def advise(p: Profile, regime_probs: list[float] | None = None, model_picks: lis
                           "tax or legal advice. Past and simulated performance do not guarantee future results."}
 
 
-def picks_from_state(state: dict, n: int = 10) -> list[dict]:
+def picks_from_state(state: dict, n: int = 10, max_weight: float = 0.20) -> list[dict]:
     """Long-only model picks: highest-scoring names from the engine's latest book."""
     rows = [r for r in state.get("portfolio", []) if r.get("score") is not None]
     rows.sort(key=lambda r: -r["score"])
     top = [r for r in rows[:n] if r["score"] > 0]
-    tot = sum(r["score"] for r in top) or 1.0
-    return [{"asset": r["asset"], "weight": r["score"] / tot, "price": r.get("price")} for r in top]
+    if not top:
+        return []
+    w = np.array([r["score"] for r in top], float)
+    w /= w.sum()
+    cap = max(max_weight, 1.0 / len(top))
+    for _ in range(50):  # cap single names, redistribute the excess pro rata
+        over = w > cap + 1e-12
+        if not over.any():
+            break
+        excess = (w[over] - cap).sum()
+        w[over] = cap
+        w[~over] += excess * w[~over] / w[~over].sum()
+    return [{"asset": r["asset"], "weight": float(x), "price": r.get("price")} for r, x in zip(top, w)]
