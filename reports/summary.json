@@ -1,0 +1,86 @@
+{
+  "metrics": {
+    "regime_conformal": {
+      "ann_return": 0.05933693808599225,
+      "ann_vol": 0.10356304076780305,
+      "sharpe_net": 0.5729547687763941,
+      "sharpe_gross": 0.9801443937062083,
+      "sortino": 0.8477114326578478,
+      "max_drawdown": -0.20218862872259222,
+      "hit_rate": 0.5164383561643836,
+      "avg_daily_turnover": 0.33454668712406643,
+      "mean_ic": 0.024732505871089338,
+      "ic_tstat": 7.480236261138038,
+      "interval_coverage": 0.8024141876430206,
+      "prob_sharpe": 0.9537853578729383,
+      "deflated_sharpe": 0.7975541753415475
+    },
+    "regime_point": {
+      "ann_return": 0.04936425562661497,
+      "ann_vol": 0.1036370263646046,
+      "sharpe_net": 0.47631871880794463,
+      "sharpe_gross": 0.8951376374108553,
+      "sortino": 0.7033554520298599,
+      "max_drawdown": -0.22739290434819048,
+      "hit_rate": 0.5200913242009132,
+      "avg_daily_turnover": 0.3443597344780445,
+      "mean_ic": 0.024732505871089338,
+      "ic_tstat": 7.480236261138038,
+      "interval_coverage": 0.8024141876430206,
+      "prob_sharpe": 0.9191937102033098,
+      "deflated_sharpe": 0.7086356549933727
+    },
+    "blind_point": {
+      "ann_return": 0.0038834828282468888,
+      "ann_vol": 0.10353523933131187,
+      "sharpe_net": 0.037508802343367786,
+      "sharpe_gross": 0.4467923928560164,
+      "sortino": 0.05636495973669591,
+      "max_drawdown": -0.39502074910356694,
+      "hit_rate": 0.5077625570776255,
+      "avg_daily_turnover": 0.3362889535208861,
+      "mean_ic": 0.01881255876455966,
+      "ic_tstat": 5.434498200773136,
+      "interval_coverage": 0.8000572082379863,
+      "prob_sharpe": 0.5440045283097197,
+      "deflated_sharpe": 0.2290103370384371
+    },
+    "oracle_true_signal": {
+      "ann_return": 0.11084408556787052,
+      "ann_vol": 0.10296554073669888,
+      "sharpe_net": 1.076516325342566,
+      "sharpe_gross": 1.565128796788946,
+      "sortino": 1.6290193393312418,
+      "max_drawdown": -0.25499482107627425,
+      "hit_rate": 0.539269406392694,
+      "avg_daily_turnover": 0.3977804489482145,
+      "mean_ic": 0.035148827284787555,
+      "ic_tstat": 10.474495152175274,
+      "interval_coverage": 0.8024141876430206,
+      "prob_sharpe": 0.9991864915600976,
+      "deflated_sharpe": 0.9991864915600976
+    }
+  },
+  "regimes": {
+    "filtered_accuracy": 0.8378995433789954,
+    "confusion": {
+      "0": {
+        "calm": 1279,
+        "crisis": 0,
+        "stressed": 53
+      },
+      "1": {
+        "calm": 105,
+        "crisis": 11,
+        "stressed": 373
+      },
+      "2": {
+        "calm": 4,
+        "crisis": 183,
+        "stressed": 182
+      }
+    }
+  },
+  "horizon": 5,
+  "runtime_sec": 577.7
+}

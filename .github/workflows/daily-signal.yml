@@ -1,0 +1,32 @@
+# Runs after the US close on weekdays. Add repository secrets for your provider
+# (e.g. ALPACA_API_KEY / ALPACA_SECRET_KEY). Dry run unless EXECUTE is "true".
+name: daily-signal
+on:
+  schedule: [{cron: "30 21 * * 1-5"}]
+  workflow_dispatch:
+    inputs:
+      provider: {default: "yahoo"}
+      execute: {default: "false"}
+jobs:
+  signal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install ".[yahoo]"
+      - name: generate target portfolio
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+          POLYGON_API_KEY: ${{ secrets.POLYGON_API_KEY }}
+          TIINGO_API_KEY: ${{ secrets.TIINGO_API_KEY }}
+          FMP_API_KEY: ${{ secrets.FMP_API_KEY }}
+          EODHD_API_KEY: ${{ secrets.EODHD_API_KEY }}
+          ALPACA_PAPER: "true"
+        run: |
+          ARGS="--provider ${{ inputs.provider || 'yahoo' }}"
+          if [ "${{ inputs.execute }}" = "true" ]; then ARGS="$ARGS --execute"; fi
+          python -m regimeml.live $ARGS
+      - uses: actions/upload-artifact@v4
+        with: {name: signals, path: signals/}
