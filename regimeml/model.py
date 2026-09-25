@@ -40,6 +40,7 @@ class ModelConfig:
     min_samples_leaf: int = 200
     l2: float = 1.0
     ridge_weight: float = 0.3
+    aci_lr: float = 0.05          # online conformal step size (0 = static intervals)
     seed: int = 0
 
 
@@ -121,12 +122,69 @@ class RegimeConformalModel:
         mean = (1 - w) * self.gbm_.predict(X) + w * self.ridge_.predict(X)
         lo = self.q_lo_.predict(X) - self.qhat_
         hi = self.q_hi_.predict(X) + self.qhat_
-        out = pd.DataFrame({"pred": mean, "lo": lo, "hi": hi}, index=test.index)
-        out["width"] = (hi - lo).clip(min=1e-6)
-        out["score"] = out["pred"] / out["width"]
+        # Guard against quantile crossing, then compute interval/score columns.
+        lo, hi = np.minimum(lo, hi), np.maximum(lo, hi)
+        out = pd.DataFrame({"pred": mean, "lo_raw": lo, "hi_raw": hi}, index=test.index)
+        out = apply_interval(out, 0.0)
         if cfg.use_regimes:
             out = out.join(test[[c for c in test.columns if c.startswith("f_regime_")]])
         return out
+
+
+class QuantileTracker:
+    """Online conformal quantile tracking (Angelopoulos, Candes & Tibshirani, 2023).
+
+    Widens every interval by ``theta`` and nudges ``theta`` after each realised
+    outcome: up when coverage fell short of 1 - alpha, down when it overshot.
+    That keeps long-run coverage on target even when the market drifts away
+    from the calibration period, which static split-conformal cannot promise.
+    """
+
+    def __init__(self, alpha: float, lr: float = 0.05, theta: float = 0.0,
+                 min_theta: float = -np.inf):
+        self.alpha, self.lr, self.theta, self.min_theta = alpha, lr, theta, min_theta
+
+    def update(self, miss_rate: float) -> float:
+        if np.isfinite(miss_rate):
+            self.theta = max(self.min_theta, self.theta + self.lr * (miss_rate - self.alpha))
+        return self.theta
+
+
+def apply_interval(out: pd.DataFrame, theta) -> pd.DataFrame:
+    """Recompute lo/hi/width/score after widening raw CQR bounds by ``theta``."""
+    lo, hi = out["lo_raw"] - theta, out["hi_raw"] + theta
+    mid = (out["lo_raw"] + out["hi_raw"]) / 2
+    out["lo"], out["hi"] = np.minimum(lo, mid), np.maximum(hi, mid)  # never cross
+    out["width"] = (out["hi"] - out["lo"]).clip(lower=1e-6)
+    out["score"] = out["pred"] / out["width"]
+    return out
+
+
+def adaptive_intervals(preds: pd.DataFrame, alpha: float, horizon: int, lr: float) -> pd.DataFrame:
+    """Sequentially apply quantile tracking to walk-forward predictions.
+
+    The label of date t is only known at the close of t + horizon, so the
+    update for date t is applied before predicting date t + horizon -- causal.
+    """
+    d = preds.index.get_level_values("date")
+    dates = d.unique().sort_values()
+    # Bound how far intervals may shrink when the model has been over-covering.
+    tracker = QuantileTracker(alpha, lr, min_theta=-0.25 * float((preds["hi_raw"] - preds["lo_raw"]).median()))
+    labelled = preds.dropna(subset=["y"])
+    groups = {k: (g["y"].values, g["lo_raw"].values, g["hi_raw"].values)
+              for k, g in labelled.groupby(level="date")}
+    thetas = np.zeros(len(dates))
+    for i in range(len(dates)):
+        j = i - horizon
+        if j >= 0 and dates[j] in groups:
+            y, lo, hi = groups[dates[j]]
+            th = thetas[j]
+            tracker.update(float(((y < lo - th) | (y > hi + th)).mean()))
+        thetas[i] = tracker.theta
+    thetas = pd.Series(thetas, index=dates)
+    out = preds.copy()
+    out["theta"] = thetas.reindex(d).values
+    return apply_interval(out, out["theta"])
 
 
 def walk_forward_predict(panel: pd.DataFrame, splitter, cfg: ModelConfig, verbose: bool = False) -> pd.DataFrame:
@@ -142,4 +200,7 @@ def walk_forward_predict(panel: pd.DataFrame, splitter, cfg: ModelConfig, verbos
         if verbose:
             print(f"  fold {i + 1:2d}: train {tr[0].date()}..{tr[-1].date()} "
                   f"({len(train):,} rows) -> test {te[0].date()}..{te[-1].date()}")
-    return pd.concat(preds).join(panel[["y", "fwd_ret_1"]])
+    out = pd.concat(preds).join(panel[["y", "fwd_ret_1"]])
+    if cfg.aci_lr > 0:
+        out = adaptive_intervals(out, cfg.alpha, cfg.horizon, cfg.aci_lr)
+    return out

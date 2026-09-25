@@ -1,0 +1,29 @@
+# Weekday e-mail after the US close, without running a server.
+# Repository secrets needed: SMTP_HOST, SMTP_USER, SMTP_PASSWORD, EMAIL_TO,
+# plus your data provider key if not using yahoo. Put your profile in
+# examples/profile.json (or point PROFILE at another file).
+name: daily-advice
+on:
+  schedule: [{cron: "40 21 * * 1-5"}]
+  workflow_dispatch:
+jobs:
+  advise:
+    runs-on: ubuntu-latest
+    env:
+      PROFILE: examples/profile.json
+      PROVIDER: yahoo
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install ".[yahoo]"
+      - name: build and e-mail today's note
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: python -m regimeml.advise --profile "$PROFILE" --provider "$PROVIDER" --email

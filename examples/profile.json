@@ -1,0 +1,13 @@
+{
+  "name": "Alex",
+  "age": 34,
+  "net_worth": 250000,
+  "investable": 100000,
+  "goal": "retirement",
+  "risk_tolerance": 4,
+  "monthly_expenses": 4000,
+  "monthly_contribution": 1000,
+  "emergency_fund": 24000,
+  "high_interest_debt": 0,
+  "email": ""
+}

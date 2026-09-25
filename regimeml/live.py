@@ -88,8 +88,11 @@ def main(argv: list[str] | None = None) -> None:
         for o in orders:
             print(f"  {o.side:4s} {o.qty:6d} {o.symbol:6s} ~${o.notional:,.0f}")
         if a.execute:
-            broker.submit(orders)
-            print("submitted.")
+            results = broker.submit(orders)
+            bad = [r for r in results if not r["ok"]]
+            print(f"submitted {len(results) - len(bad)}/{len(results)} orders.")
+            for r in bad:
+                print(f"  REJECTED {r['symbol']}: {r['error']}")
         else:
             print("dry run -- pass --execute to send.")
 

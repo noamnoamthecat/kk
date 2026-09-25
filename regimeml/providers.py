@@ -46,6 +46,10 @@ class DataProvider(ABC):
     def __init__(self, session: requests.Session | None = None):
         self.http = session or requests.Session()
 
+    def latest_prices(self, tickers: list[str]) -> pd.Series | None:
+        """Most recent trade price per ticker (intraday), or None if unsupported."""
+        return None
+
     @abstractmethod
     def _fetch_one(self, ticker: str, start: str, end: str | None) -> pd.Series:
         """Adjusted close series for one ticker, indexed by tz-naive date."""
@@ -101,6 +105,15 @@ class YahooProvider(DataProvider):
             raise ProviderError("yahoo: no data returned (network blocked or bad tickers)")
         df.index = pd.to_datetime(df.index).tz_localize(None)
         return df
+
+    def latest_prices(self, tickers):
+        import yfinance as yf
+
+        df = yf.download(tickers, period="1d", interval="1m", auto_adjust=True, progress=False)["Close"]
+        if isinstance(df, pd.Series):
+            df = df.to_frame(tickers[0])
+        last = df.ffill().iloc[-1] if len(df) else None
+        return None if last is None else last.dropna()
 
     def _fetch_one(self, ticker, start, end):  # pragma: no cover - batch download above
         return self.get_prices([ticker], start, end)[ticker]
@@ -158,6 +171,12 @@ class AlpacaProvider(DataProvider):
         df.index = pd.to_datetime(df.index)
         return df.loc[:, df.notna().mean() >= min_history].ffill(limit=3).dropna()
 
+    def latest_prices(self, tickers):
+        snaps = self._get("https://data.alpaca.markets/v2/stocks/snapshots",
+                          params={"symbols": ",".join(tickers), "feed": self.feed}).json()
+        px = {s: (v.get("latestTrade") or {}).get("p") for s, v in snaps.items() if v}
+        return pd.Series(px, dtype=float).dropna()
+
     def _fetch_one(self, ticker, start, end):
         return self.get_prices([ticker], start, end)[ticker]
 
@@ -174,6 +193,13 @@ class PolygonProvider(DataProvider):
                               "apiKey": _env("POLYGON_API_KEY")})
         rows = r.json().get("results") or []
         return pd.Series({pd.Timestamp(x["t"], unit="ms"): x["c"] for x in rows}, dtype=float)
+
+    def latest_prices(self, tickers):
+        js = self._get("https://api.polygon.io/v2/snapshot/locale/us/markets/stocks/tickers",
+                       params={"tickers": ",".join(tickers), "apiKey": _env("POLYGON_API_KEY")}).json()
+        px = {t["ticker"]: (t.get("lastTrade") or {}).get("p") or (t.get("day") or {}).get("c")
+              for t in js.get("tickers") or []}
+        return pd.Series(px, dtype=float).dropna()
 
 
 class TiingoProvider(DataProvider):

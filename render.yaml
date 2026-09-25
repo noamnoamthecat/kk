@@ -1,0 +1,33 @@
+# One-click deploy on Render (https://render.com): New + > Blueprint > pick this repo.
+# Secrets marked sync:false are entered in the Render dashboard, never committed.
+services:
+  - type: web
+    name: regimeml
+    runtime: docker
+    plan: starter            # needs an always-on instance with a disk; free instances sleep
+    healthCheckPath: /healthz
+    disk:
+      name: regimeml-data
+      mountPath: /data
+      sizeGB: 1
+    envVars:
+      - key: REGIMEML_MODE
+        value: live          # "replay" = simulated demo, no keys needed
+      - key: REGIMEML_PROVIDER
+        value: yahoo         # or alpaca / polygon / tiingo / fmp / eodhd / twelvedata / alphavantage
+      - key: REGIMEML_TOKEN
+        sync: false          # password for the dashboard: open https://<app>/?token=<this>
+      - key: ALPACA_API_KEY
+        sync: false
+      - key: ALPACA_SECRET_KEY
+        sync: false
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        value: "587"
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
